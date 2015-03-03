@@ -12,7 +12,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package session
+package redistore
 
 import (
 	"bytes"
@@ -68,7 +68,7 @@ func TestSession(t *testing.T) {
 
 	tg := tango.Classic()
 	tg.Use(session.New(session.Options{
-		Store: NewRedisStore(Options{
+		Store: New(Options{
 			Host:    "127.0.0.1",
 			DbIndex: 0,
 			MaxAge:  30 * time.Minute,

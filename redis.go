@@ -13,7 +13,7 @@
 // License for the specific language governing permissions and limitations
 // under the License.
 
-package session
+package redistore
 
 import (
 	"bytes"
@@ -62,7 +62,7 @@ func preOptions(opts []Options) Options {
 }
 
 // NewRedisStore creates and returns a redis session store.
-func NewRedisStore(opts ...Options) *RedisStore {
+func New(opts ...Options) *RedisStore {
 	opt := preOptions(opts)
 	var pool = &redis.Pool{
 		MaxIdle:     5,
