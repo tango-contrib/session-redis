@@ -58,6 +58,9 @@ func preOptions(opts []Options) Options {
 	if opt.Port == "" {
 		opt.Port = "6379"
 	}
+	if opt.MaxAge == 0 {
+		opt.MaxAge = session.DefaultMaxAge
+	}
 	return opt
 }
 
@@ -216,7 +219,7 @@ func (s *RedisStore) Clear(id session.Id) bool {
 }
 
 func (s *RedisStore) Add(id session.Id) bool {
-	return false
+	return true
 }
 
 func (s *RedisStore) Do(cmd string, args ...interface{}) (interface{}, error) {

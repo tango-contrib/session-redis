@@ -1,7 +1,7 @@
 session-redis [![Build Status](https://drone.io/github.com/tango-contrib/session-redis/status.png)](https://drone.io/github.com/tango-contrib/session-redis/latest) [![](http://gocover.io/_badge/github.com/tango-contrib/session-redis)](http://gocover.io/github.com/tango-contrib/session-redis)
 ======
 
-Session-redis is a store of [session](https://github.com/tango-contrib/session) middleware for [Tango](https://github.com/lunny/tango). 
+Session-redis is a store of [session](https://github.com/tango-contrib/session) middleware for [Tango](https://github.com/lunny/tango) stored session data via [redis](http://redis.io). 
 
 ## Installation
 
@@ -42,4 +42,4 @@ func main() {
 
 ## Getting Help
 
-- [API Reference](https://gowalker.org/github.com/tango-contrib/session)
+- [API Reference](https://gowalker.org/github.com/tango-contrib/session-redis)
