@@ -103,27 +103,6 @@ func New(opts ...Options) *RedisStore {
 	}
 }
 
-/*
-func (c *RedisStore) getObject(key string) interface{} {
-	conn := c.pool.Get()
-	defer conn.Close()
-	raw, err := conn.Do("GET", key)
-	if raw == nil {
-		return nil
-	}
-	item, err := redis.Bytes(raw, err)
-	if err != nil {
-		c.Logger.Errorf("redis.Bytes failed: %s", err)
-		return nil
-	}
-
-	value, err := c.deserialize(item)
-	if err != nil {
-		return nil
-	}
-	return value
-}*/
-
 func (c *RedisStore) serialize(value interface{}) ([]byte, error) {
 	err := c.registerGobConcreteType(value)
 	if err != nil {
@@ -193,6 +172,10 @@ func (s *RedisStore) Set(id session.Id, key string, val interface{}) error {
 		return err
 	}
 	_, err = s.Do("HSET", id, key, bs)
+	if err == nil {
+		// when write data, reset maxage
+		_, err = s.Do("EXPIRE", id, s.MaxAge)
+	}
 	return err
 }
 
@@ -203,6 +186,9 @@ func (s *RedisStore) Get(id session.Id, key string) interface{} {
 		s.Logger.Errorf("redis HGET failed: %s", err)
 		return nil
 	}
+
+	// when read data, reset maxage
+	s.Do("EXPIRE", id, s.MaxAge)
 
 	item, err := redis.Bytes(val, err)
 	if err != nil {
