@@ -88,6 +88,7 @@ func New(opts ...Options) *RedisStore {
 					return nil, err
 				}
 			}
+			_, err = c.Do("SELECT", opt.DbIndex)
 			return c, err
 		},
 		// custom connection test method
@@ -238,7 +239,9 @@ func (s *RedisStore) SetMaxAge(maxAge time.Duration) {
 }
 
 func (s *RedisStore) SetIdMaxAge(id session.Id, maxAge time.Duration) {
-
+	if s.Exist(id) {
+		s.Do("EXPIRE", id, s.MaxAge)
+	}
 }
 
 func (s *RedisStore) Ping() error {
@@ -247,5 +250,5 @@ func (s *RedisStore) Ping() error {
 }
 
 func (s *RedisStore) Run() error {
-	return nil
+	return s.Ping()
 }
