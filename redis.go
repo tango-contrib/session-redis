@@ -196,7 +196,9 @@ func (s *RedisStore) Get(id session.Id, key string) interface{} {
 
 	item, err := redis.Bytes(val, err)
 	if err != nil {
-		s.Logger.Errorf("redis.Bytes failed: %s", err)
+		if err != redis.ErrNil {
+			s.Logger.Errorf("redis.Bytes failed: %s", err)
+		}
 		return nil
 	}
 
