@@ -36,18 +36,48 @@ type Test struct {
 	Name string
 }
 
+func sliceEq(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := 0; i < len(a); i++ {
+		if a[i] != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func mapEq(a, b map[string]int) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for k, v := range a {
+		if b[k] != v {
+			return false
+		}
+	}
+	return true
+}
+
 func (action *SessionAction) Get() string {
 	var test1 = []string{"1", "2"}
 	action.Session.Set("11", test1)
 	res := action.Session.Get("11")
 
 	fmt.Println(res.([]string))
+	if !sliceEq(res.([]string), test1) {
+		return "0"
+	}
 
 	var test2 = map[string]int{"1": 1, "2": 2}
 	action.Session.Set("22", test2)
 	res2 := action.Session.Get("22")
 
 	fmt.Println(res2.(map[string]int))
+	if !mapEq(res2.(map[string]int), test2) {
+		return "0"
+	}
 
 	for i := 0; i < 3; i++ {
 		var test3 = Test{1, "xlw"}
@@ -55,6 +85,10 @@ func (action *SessionAction) Get() string {
 		res3 := action.Session.Get("33")
 
 		fmt.Println(res3.(*Test))
+
+		if *res3.(*Test) != test3 {
+			return "0"
+		}
 	}
 
 	action.Session.Set("test", "1")
