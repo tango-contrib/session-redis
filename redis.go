@@ -47,6 +47,10 @@ type RedisStore struct {
 	pool   *redis.Pool
 }
 
+func (r *RedisStore) maxSeconds() int64 {
+	return int64(r.MaxAge / time.Second)
+}
+
 func preOptions(opts []Options) Options {
 	var opt Options
 	if len(opts) > 0 {
@@ -178,7 +182,7 @@ func (s *RedisStore) Set(id session.Id, key string, val interface{}) error {
 	_, err = s.Do("HSET", id, key, bs)
 	if err == nil {
 		// when write data, reset maxage
-		_, err = s.Do("EXPIRE", id, s.MaxAge)
+		_, err = s.Do("EXPIRE", id, s.maxSeconds())
 	}
 	return err
 }
@@ -192,7 +196,7 @@ func (s *RedisStore) Get(id session.Id, key string) interface{} {
 	}
 
 	// when read data, reset maxage
-	s.Do("EXPIRE", id, s.MaxAge)
+	s.Do("EXPIRE", id, s.maxSeconds())
 
 	item, err := redis.Bytes(val, err)
 	if err != nil {
@@ -242,7 +246,7 @@ func (s *RedisStore) SetMaxAge(maxAge time.Duration) {
 
 func (s *RedisStore) SetIdMaxAge(id session.Id, maxAge time.Duration) {
 	if s.Exist(id) {
-		s.Do("EXPIRE", id, s.MaxAge)
+		s.Do("EXPIRE", id, maxAge/time.Second)
 	}
 }
 
