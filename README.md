@@ -44,6 +44,6 @@ func main() {
 
 - [API Reference](https://gowalker.org/github.com/tango-contrib/session-redis)
 
-## LICENSE
+## License
 
-[BSD License](https://github.com/tango-contrib/session-redis/blob/master/LICENSE)
+This project is under BSD License. See the [LICENSE](https://github.com/tango-contrib/session-redis/blob/master/LICENSE) file for the full license text.
