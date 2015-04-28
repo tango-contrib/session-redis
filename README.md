@@ -43,3 +43,7 @@ func main() {
 ## Getting Help
 
 - [API Reference](https://gowalker.org/github.com/tango-contrib/session-redis)
+
+## LICENSE
+
+[BSD License](https://github.com/tango-contrib/session-redis/blob/master/LICENSE)
