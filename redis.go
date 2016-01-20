@@ -22,11 +22,12 @@ import (
 var _ session.Store = &RedisStore{}
 
 type Options struct {
-	Host     string
-	Port     string
-	Password string
-	DbIndex  int
-	MaxAge   time.Duration
+	Host      string
+	Port      string
+	Password  string
+	DbIndex   int
+	MaxAge    time.Duration
+	KeyPrefix string
 }
 
 // RedisStore represents a redis session store implementation.
@@ -225,8 +226,8 @@ func (s *RedisStore) Do(cmd string, args ...interface{}) (interface{}, error) {
 }
 
 func (s *RedisStore) Exist(id session.Id) bool {
-	has, err := s.Do("EXISTS", id)
-	return err == nil && has.(bool)
+	has, err := redis.Int64(s.Do("EXISTS", id))
+	return err == nil && has > 0
 }
 
 func (s *RedisStore) SetMaxAge(maxAge time.Duration) {

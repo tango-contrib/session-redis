@@ -46,4 +46,4 @@ func main() {
 
 ## License
 
-This project is under BSD License. See the [LICENSE](https://github.com/tango-contrib/session-redis/blob/master/LICENSE) file for the full license text.
+This project is under BSD License. See the [LICENSE](LICENSE) file for the full license text.
