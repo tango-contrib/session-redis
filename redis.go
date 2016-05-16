@@ -102,13 +102,13 @@ func New(opts ...Options) *RedisStore {
 }
 
 func (c *RedisStore) serialize(value interface{}) ([]byte, error) {
+	if reflect.TypeOf(value).Kind() == reflect.Struct {
+		return nil, fmt.Errorf("serialize func only take pointer of a struct")
+	}
+
 	err := c.registerGobConcreteType(value)
 	if err != nil {
 		return nil, err
-	}
-
-	if reflect.TypeOf(value).Kind() == reflect.Struct {
-		return nil, fmt.Errorf("serialize func only take pointer of a struct")
 	}
 
 	var b bytes.Buffer
@@ -151,8 +151,7 @@ func (c *RedisStore) registerGobConcreteType(value interface{}) error {
 	switch t.Kind() {
 	case reflect.Ptr:
 		v := reflect.ValueOf(value)
-		i := v.Elem().Interface()
-		gob.Register(i)
+		return c.registerGobConcreteType(v.Elem().Interface())
 	case reflect.Struct, reflect.Map, reflect.Slice:
 		gob.Register(value)
 	case reflect.String, reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64, reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Bool, reflect.Float32, reflect.Float64, reflect.Complex64, reflect.Complex128:
